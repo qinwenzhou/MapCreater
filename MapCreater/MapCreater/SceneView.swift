@@ -9,7 +9,7 @@
 import UIKit
 
 private class NodeView: UIButton {
-  var node: Node
+  var node: Sprite
   
   override var isSelected: Bool {
     didSet {
@@ -17,11 +17,11 @@ private class NodeView: UIButton {
     }
   }
   
-  init(node: Node) {
+  init(node: Sprite) {
     self.node = node
     super.init(frame: .zero)
     imageView?.contentMode = .scaleAspectFit
-    setImage(node.sprite.image(), for: .normal)
+    setImage(node.type.image(), for: .normal)
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -56,7 +56,7 @@ class SceneView: UIView {
     render()
   }
   
-  private func createView(for node: Node) -> NodeView {
+  private func createView(for node: Sprite) -> NodeView {
     let view = NodeView(node: node)
     view.addTarget(self, action: #selector(onNodeView(_:)), for: .touchUpInside)
     return view
@@ -83,7 +83,7 @@ class SceneView: UIView {
     let w = self.frame.size.width / CGFloat(columns)
     let h = self.frame.size.height / CGFloat(rows)
     
-    for (i, rows) in map.nodes.enumerated() {
+    for (i, rows) in map.sprites.enumerated() {
       for (j, node) in rows.enumerated() {
         let view = createView(for: node)
         view.frame = CGRect(
@@ -94,8 +94,8 @@ class SceneView: UIView {
     }
   }
   
-  func selectedNodes() -> [Node] {
-    var nodes = [Node]()
+  func selectedNodes() -> [Sprite] {
+    var nodes = [Sprite]()
     
     for sub in subviews {
       if sub is NodeView {

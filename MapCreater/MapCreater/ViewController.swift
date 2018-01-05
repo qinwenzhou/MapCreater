@@ -15,7 +15,7 @@ class ViewController: UIViewController {
   @IBOutlet weak var sceneView: SceneView!
   @IBOutlet weak var collectionView: UICollectionView!
   
-  let sprites: [Sprite] =
+  let sptypes: [SPType] =
     [.grass, .tree, .flower, .floor, .bird, .stone, .water]
   
   var map: Map!
@@ -36,24 +36,22 @@ class ViewController: UIViewController {
   }
   
   private func reset() {
-    /*
-    do {
-      if let filePath = Bundle.main.path(forResource: "test.json", ofType: nil) {
-        let json = try String(contentsOfFile: filePath, encoding: .utf8)
-        if let m = Map.deserialize(from: json) {
-          map = m
-          sureMap = map.copy() as! Map
-          
-          sceneView.map = map
-        }
-      }
-    } catch let error {
-      print("\(error)")
-    }*/
-    
+//    do {
+//      if let filePath = Bundle.main.path(forResource: "test.json", ofType: nil) {
+//        let json = try String(contentsOfFile: filePath, encoding: .utf8)
+//        if let m = Map.deserialize(from: json) {
+//          map = m
+//          sureMap = map.copy() as! Map
+//
+//          sceneView.map = map
+//        }
+//      }
+//    } catch let error {
+//      print("\(error)")
+//    }
     map = Map(rows: 6, columns: 9)
     sureMap = map.copy() as! Map
-    
+ 
     sceneView.map = map
   }
   
@@ -103,11 +101,11 @@ extension ViewController: UICollectionViewDataSource {
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return sprites.count
+    return sptypes.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let sprite = sprites[indexPath.row]
+    let sprite = sptypes[indexPath.row]
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! SpriteCell
     cell.imageView.contentMode = .scaleAspectFit
     cell.imageView.image = sprite.image()
@@ -138,9 +136,9 @@ extension ViewController: UICollectionViewDelegate {
     guard nodes.count > 0 else {
       return
     }
-    let sprite = sprites[indexPath.row]
+    let sprite = sptypes[indexPath.row]
     for node in nodes {
-      node.sprite = sprite
+      node.type = sprite
     }
     sceneView.render()
   }

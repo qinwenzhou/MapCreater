@@ -9,7 +9,7 @@
 import UIKit
 import HandyJSON
 
-enum Sprite: Int, HandyJSONEnum {
+enum SPType: Int, HandyJSONEnum {
   case grass
   case tree
   case flower
@@ -57,82 +57,82 @@ enum Sprite: Int, HandyJSONEnum {
   }
 }
 
-class Node: NSObject, HandyJSON {
+class Sprite: NSObject, HandyJSON {
   var r: Int
   var c: Int
-  var sprite: Sprite
+  var type: SPType
   
   required override init() {
     self.r = 0
     self.c = 0
-    self.sprite = .grass
+    self.type = .grass
     super.init()
   }
   
-  init(r: Int, c: Int, sprite: Sprite = .grass) {
+  init(r: Int, c: Int, type: SPType = .grass) {
     self.r = r
     self.c = c
-    self.sprite = sprite
+    self.type = type
   }
 }
 
 class Map: NSObject, HandyJSON {
   var rows: Int
   var columns: Int
-  var nodes = [[Node]]()
+  var sprites = [[Sprite]]()
   
   required override init() {
     self.rows = 6
     self.columns = 9
     super.init()
-    resetNodes()
+    resetSprites()
   }
   
   init(rows: Int, columns: Int) {
     self.rows = rows
     self.columns = columns
     super.init()
-    resetNodes()
+    resetSprites()
   }
   
-  fileprivate func resetNodes() {
-    nodes.removeAll()
+  fileprivate func resetSprites() {
+    sprites.removeAll()
     
     for i in 0..<rows {
-      var rowNodes = [Node]()
+      var rowSprites = [Sprite]()
       for j in 0..<columns {
-        rowNodes.append(Node(r: i, c: j))
+        rowSprites.append(Sprite(r: i, c: j))
       }
-      nodes.append(rowNodes)
+      sprites.append(rowSprites)
     }
   }
   
-  fileprivate func copyNodes() -> [[Node]] {
-    var newNodes = [[Node]]()
+  fileprivate func copySprites() -> [[Sprite]] {
+    var newSprites = [[Sprite]]()
     
-    for oldNodes in nodes {
-      var rowNodes = [Node]()
-      for oldNode in oldNodes {
-        rowNodes.append(oldNode.copy() as! Node)
+    for oldSprites in sprites {
+      var rowSprites = [Sprite]()
+      for oldSprite in oldSprites {
+        rowSprites.append(oldSprite.copy() as! Sprite)
       }
-      newNodes.append(rowNodes)
+      newSprites.append(rowSprites)
     }
-    return newNodes
+    return newSprites
   }
 }
 
 // MARK: - NSCopying
 
-extension Node: NSCopying {
+extension Sprite: NSCopying {
   func copy(with zone: NSZone? = nil) -> Any {
-    return Node(r: r, c: c, sprite: sprite)
+    return Sprite(r: r, c: c, type: type)
   }
 }
 
 extension Map: NSCopying {
   func copy(with zone: NSZone? = nil) -> Any {
     let newMap = Map(rows: rows, columns: columns)
-    newMap.nodes = copyNodes()
+    newMap.sprites = copySprites()
     return newMap
   }
 }
